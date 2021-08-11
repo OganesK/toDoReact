@@ -4,14 +4,7 @@ import Todo from './components/Todo'
 import FilterButton from './components/FilterButton';
 import Form from './components/Form';
 import {nanoid} from 'nanoid';
-
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) {return parts.pop().split(';').shift();}
-}
-
-
+import { getCookie } from './misc/getCookie'
 
 function usePrevious(value) {
   const ref = useRef();
@@ -19,6 +12,13 @@ function usePrevious(value) {
     ref.current = value;
   });
   return ref.current;
+}
+
+const getData = async id => {
+  const response = await fetch(`http://localhost:3001/getToDo?${id}`)
+  const Tasks = await response.text()
+  console.log(Tasks)
+  return Tasks
 }
 
 const FILTER_MAP = {
@@ -30,7 +30,7 @@ const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 function App(props) {
 
-  const [tasks, setTasks] = useState(props.tasks);
+  const [tasks, setTasks] = useState(getData());
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +43,8 @@ function App(props) {
     })
     setTasks(editedTaskList);
   };
+
+  
 
   const deleteTask = id => {
     const remainingTasks = tasks.filter(task => id !== task.id);
