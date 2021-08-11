@@ -2,11 +2,20 @@ const express = require('express');
 const {graphqlHTTP} = require('express-graphql');
 const cors = require('cors');
 const schema = require('./schemas/graphql/schema')
-const mongoDb = require('mongodb');
+const mongoose = require('mongoose');
+const User = require('./schemas/mongo/userSchema.js');
+const userRoute = require('./routes/user.route');
 
+
+
+const URI = "mongodb+srv://kostjaog:qwertyt123e5@cluster0.dp8zu.mongodb.net/ToDoApp?retryWrites=true&w=majority";
 const PORT = 3001;
-// const URI = "mongodb+srv://kostjaog:qwertyt123e5@cluster0.dp8zu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// const client = new mongoDb.MongoClient(URI);
+
+
+mongoose.connect(URI);
+mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const users = [
     {
         id:1,
@@ -16,24 +25,15 @@ const users = [
 ];
 
 const createUser = (input) => {
-    const id = Date.now();
-    return {
-        id, ...input
-    }
+    const new_User = new User({
+        username: "Tom",
+        email: "qwertyt@gmail.com",
+    })
+    new_User.save();
 }
 
 const root = {
-    getAllUsers: () => {
-        return users;
-    },
-    getUser: ({id}) => {
-        return users.filter(user => user.id === id)
-    },
-    createUser: ({input}) => {
-        const user = createUser(input);
-        users.push(user);
-        return user;
-    }
+    
 }
 
 const app = express();
@@ -43,5 +43,9 @@ app.use('/graphql', graphqlHTTP({
     schema,
     rootValue: root
 }))
+app.use(userRoute);
 
 app.listen(PORT, () => console.log(`Server is listening on: ${PORT}`));
+
+
+createUser();
