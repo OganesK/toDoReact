@@ -10,7 +10,7 @@ const Form = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.addTask(name);
+        props.addTask(name, props.tasks, props.setTasks);
         setName('');
     }
 

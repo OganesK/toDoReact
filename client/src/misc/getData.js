@@ -1,8 +1,12 @@
-const getData = async id => {
-    const response = await fetch(`http://localhost:3001/getToDo?${id}`)
-    const tasks = await response.text()
-    console.log(tasks)
-    return tasks
-}
+const getData = async (id, setTasks) => {
+    const response = await fetch(`http://localhost:3001/user/todoList`,
+    {
+      method: 'GET',
+      credentials: 'include'
+    });
+    const Tasks = await response.json();
+    console.log(Tasks.todoList);
+    setTasks(Tasks.todoList);
+  }
 
-module.exports = getData;
+export default getData; 
