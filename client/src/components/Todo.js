@@ -19,6 +19,30 @@ export default function Todo (props) {
     const editButtonRef = useRef(null);
 
     const wasEditing = usePrevious(isEditing);
+    
+    const saveTaskButton = async (existId, newName) => {
+      const newList = props.data.reduce((acc, task) => {
+        if(task.id === props.id){
+          task.name = newName;
+          acc.push(task);
+        }
+        return acc
+      }, [])
+      props.setData(newList);
+      console.log(JSON.stringify({
+        newList: newList
+      }))
+      await fetch(`http://localhost:3001/user/todoList/updateOne`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newList)
+      });
+    }
 
     const handleSubmit = e => {
         e.preventDefault();
@@ -30,7 +54,6 @@ export default function Todo (props) {
     const handleChange = e => {
         setNewName(e.target.value);
     }
-
     const editingTemplate = (
         <form
         className="stack-small"
@@ -58,7 +81,8 @@ export default function Todo (props) {
               Cancel
               <span className="visually-hidden">renaming {props.name}</span>
             </button>
-            <button type="submit" className="btn btn__primary todo-edit">
+            <button type="submit" className="btn btn__primary todo-edit"
+            onClick={() => saveTaskButton(props.id, newName)}>
               Save
               <span className="visually-hidden">new name for {props.name}</span>
             </button>

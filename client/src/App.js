@@ -14,13 +14,6 @@ function usePrevious(value) {
   return ref.current;
 }
 
-const getData = async id => {
-  const response = await fetch(`http://localhost:3001/getToDo?${id}`)
-  const Tasks = await response.text()
-  console.log(Tasks)
-  return Tasks
-}
-
 const FILTER_MAP = {
   All: () => true,
   Active: task => !task.completed,
@@ -30,7 +23,7 @@ const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 function App(props) {
 
-  const [tasks, setTasks] = useState(getData());
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
   const [loading, setLoading] = useState(true);
 
@@ -44,23 +37,40 @@ function App(props) {
     setTasks(editedTaskList);
   };
 
-  
-
-  const deleteTask = id => {
+  const deleteTask = async id => {
     const remainingTasks = tasks.filter(task => id !== task.id);
+    await fetch('http://localhost:3001/user/todoList/update',
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(remainingTasks)
+    });
     setTasks(remainingTasks);
   };
 
-  const toggleTaskComplited = id => {
+  const toggleTaskComplited = async id => {
     const updatedTasks = tasks.map(task => {
       if(id === task.id){
-        return {...task, complited:!task.complited};
+        return {...task, completed:!task.completed};
       }
       return task;
     })
+    await fetch('http://localhost:3001/user/todoList/update',
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedTasks)
+    });
     setTasks(updatedTasks);
   };
-
   const taskList = tasks
     .filter(FILTER_MAP[filter])
     .map(task => (
@@ -72,6 +82,8 @@ function App(props) {
       toggleTaskComplited={toggleTaskComplited}
       deleteTask={deleteTask}
       editTask={editTask}
+      setData={setTasks}
+      data={tasks}
     />
     ));
 
@@ -84,13 +96,24 @@ function App(props) {
     />
   ));
 
-  const adddTask = name => {
+  const adddTask = async name => {
     const newTask = {
       id: "todo-" + nanoid(),
       name: name,
       completed: false
     };
-    setTasks([...tasks, newTask])
+    const newTaskList = [...tasks, newTask];
+    await fetch('http://localhost:3001/user/todoList/update',
+    {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newTaskList)
+    });
+    setTasks(newTaskList)
   }
 
   const headingText = `${taskList.length} 
@@ -101,29 +124,46 @@ function App(props) {
   const prevTaskLength = usePrevious(tasks.length);
 
   const getId = async () => {
-    const response = await fetch('http://localhost:3001/newUser')
+    const response = await fetch('http://localhost:3001/auth/register')
     const id = await response.text()
     document.cookie = `id=${id}`;
     setLoading(false);
 
   }
 
-  useEffect(() => {
-    if (tasks.length - prevTaskLength === -1) {
-      listHeadingRef.current.focus();
-    }
-  }, [tasks.length, prevTaskLength]);
+  const getData = async id => {
+    const response = await fetch(`http://localhost:3001/user/todoList`,
+    {
+      method: 'GET',
+      credentials: 'include'
+    });
+    const Tasks = await response.json();
+    console.log(Tasks.todoList);
+    setTasks(Tasks.todoList);
+  }
 
-  useEffect(() => {
+
+  // useEffect(() => {
+  //   if (tasks.length - prevTaskLength === -1) {
+  //     listHeadingRef.current.focus();
+  //   }
+  // }, [tasks.length, prevTaskLength]);
+
+  function handleUseEffect() {
+
+    
     if(getCookie("id") === undefined){
       setLoading(true);
       getId();
     }else{
         // eslint-disable-next-line no-console
         console.log(`Куки есть ${document.cookie}`);
+        getData(getCookie('id'));
         setLoading(false);
     }
-}, [])
+  }
+
+  useEffect(handleUseEffect, [])
 
 if(loading) {
   return <div>Loading...</div>
