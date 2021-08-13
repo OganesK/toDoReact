@@ -11,7 +11,7 @@ router.post('/user/todoList/update', async (req,res) => {
             throw new Error("Invalid user input");
         }
         const id = req.headers.cookie.replace('id=','');
-        await User.updateOne({'_id': id}, {todoList: req.body})
+        await userModel.updateOne({'_id': id}, {todoList: req.body})
         res.status(200).send("Success");
     }catch(e){
         res.status(500).send(e.toString());

@@ -1,4 +1,5 @@
 import {React, useState} from 'react';
+import addTask from '../misc/addTask';
 
 const Form = (props) => {
 
@@ -10,7 +11,9 @@ const Form = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        props.addTask(name, props.tasks, props.setTasks);
+        try{
+        addTask(name, props.tasks, props.setTasks);
+        }catch(e){console.log(e)}
         setName('');
     }
 

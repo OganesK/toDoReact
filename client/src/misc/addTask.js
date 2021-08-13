@@ -1,12 +1,13 @@
 import {nanoid} from 'nanoid';
 
 const addTask = async (name, tasks, setTasks) => {
-    const newTask = {
+    try{const newTask = {
       id: "todo-" + nanoid(),
       name: name,
-      completed: false
+      completed: false,
     };
     const newTaskList = [...tasks, newTask];
+    console.log(newTaskList)
     await fetch('http://localhost:3001/user/todoList/update',
     {
       method: 'POST',
@@ -17,7 +18,10 @@ const addTask = async (name, tasks, setTasks) => {
       },
       body: JSON.stringify(newTaskList)
     });
-    setTasks(newTaskList)
+    setTasks(newTaskList)}catch(e){
+      console.log(e)
+    }
+
   }
 
 export default addTask;

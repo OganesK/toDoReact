@@ -5,7 +5,6 @@ const getData = async (id, setTasks) => {
       credentials: 'include'
     });
     const Tasks = await response.json();
-    console.log(Tasks.todoList);
     setTasks(Tasks.todoList);
   }
 
