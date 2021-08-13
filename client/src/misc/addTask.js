@@ -7,7 +7,6 @@ const addTask = async (name, tasks, setTasks) => {
       completed: false,
     };
     const newTaskList = [...tasks, newTask];
-    console.log(newTaskList)
     await fetch('http://localhost:3001/user/todoList/update',
     {
       method: 'POST',

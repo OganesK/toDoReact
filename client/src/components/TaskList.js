@@ -1,5 +1,4 @@
 import { React } from 'react';
-import deleteTask from '../misc/deleteTask';
 import Todo from './Todo';
 
 
@@ -13,12 +12,10 @@ const taskList = (tasks, FILTER_MAP, filter, toggleTaskComplited, deleteTask, se
     completed={task.completed}
     key={task.id}
     toggleTaskComplited={() => toggleTaskComplited(task.id, tasks, setTasks)}
-    deleteTask={deleteTask}
+    deleteTask={() => deleteTask(task.id, tasks, setTasks)}
     editTask={editTask}
     setData={setTasks}
     data={tasks}
-    tasks={tasks}
-    setTasks={setTasks}
     />
     ))
 )

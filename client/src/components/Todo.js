@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 
 export default function Todo (props) {
 
+  const [isEditing, setEditing] = useState(false);
+  const[newName, setNewName] = useState('');
+
     function usePrevious(value) {
         const ref = useRef();
         useEffect(() => {
@@ -10,45 +13,34 @@ export default function Todo (props) {
         return ref.current;
       }
 
-    
-
-    const [isEditing, setEditing] = useState(false);
-    const[newName, setNewName] = useState('');
-
     const editFieldRef = useRef(null);
     const editButtonRef = useRef(null);
 
     const wasEditing = usePrevious(isEditing);
-    
-    const saveTaskButton = async (existId, newName) => {
-      const newList = props.data.reduce((acc, task) => {
-        if(task.id === props.id){
-          task.name = newName;
-          acc.push(task);
-        }
-        return acc
-      }, [])
-      props.setData(newList);
-      console.log(JSON.stringify({
-        newList: newList
-      }))
-      await fetch(`http://localhost:3001/user/todoList/updateOne`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newList)
-      });
-    }
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        props.editTask(props.id, newName, props.tasks, props.setTasks);
+        const newList = props.data.reduce((acc, task) => {
+          if(task.id === props.id){
+            task.name = newName;
+          }
+          acc.push(task)
+          return acc
+        }, [])
+        props.setData(newList);
         setNewName('');
         setEditing(false);
+        
+        await fetch(`http://localhost:3001/user/todoList/updateOne`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newList)
+        });
     }
 
     const handleChange = e => {
@@ -81,8 +73,7 @@ export default function Todo (props) {
               Cancel
               <span className="visually-hidden">renaming {props.name}</span>
             </button>
-            <button type="submit" className="btn btn__primary todo-edit"
-            onClick={() => saveTaskButton(props.id, newName)}>
+            <button type="submit" className="btn btn__primary todo-edit">
               Save
               <span className="visually-hidden">new name for {props.name}</span>
             </button>

@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import './App.css';
-import Todo from './components/Todo'
 import FilterButton from './components/FilterButton';
 import Form from './components/Form';
 import { getCookie } from './misc/getCookie';
-// import { usePrevious } from './misc/usePrevious';
 import editTask from './misc/editTask';
 import deleteTask from './misc/deleteTask';
 import toggleTaskComplited from "./misc/toggleTaskComplited";
@@ -36,12 +34,10 @@ function App(props) {
     />
   ));
 
-  const headingText = `${taskList.length} 
-                      ${taskList.length !== 1 ? 'tasks' : 'task'} remaining`;
+  const headingText = `${tasks.length} 
+                      ${tasks.length !== 1 ? 'tasks' : 'task'} remaining`;
 
   const listHeadingRef = useRef(null);
-
-  // const prevTaskLength = usePrevious(tasks.length);
 
   useEffect(() => handleUseEffect(getCookie, setLoading, getId, getData, setTasks), [])
 
