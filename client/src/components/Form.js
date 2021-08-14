@@ -12,7 +12,7 @@ const Form = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         try{
-        addTask(name, props.tasks, props.setTasks);
+        addTask(name, props.tasks, props.setTasks, props.group);
         }catch(e){console.log(e)}
         setName('');
     }

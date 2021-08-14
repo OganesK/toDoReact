@@ -37,5 +37,20 @@ router.post('/user/todoList/updateOne', async (req, res) => {
     }
 })
 
+router.post('/user/groups/add', async (req, res) => {
+    try{
+        const id = req.headers.cookie.replace('id=','');
+        await userModel.updateOne({'_id':id}, {groups: req.body})
+    }catch(e){
+        res.status(500).send(e.toString());
+    }
+})
+
+router.get('/user/groups', async (req, res) => {
+    const id = req.headers.cookie.replace('id=','');
+    const result = await userModel.findOne({_id: id});
+    res.status(200).send(result.groups)
+})
+
 module.exports = router;
 

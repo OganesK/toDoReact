@@ -13,9 +13,13 @@ const userSchema = new Schema({
             },
             completed: {
                 type: Boolean
+            },
+            group:{
+                type: String
             }
         }
-    ]
+    ],
+    groups: [{type:String}]
 })
 
 module.exports = mongoose.model('User', userSchema);

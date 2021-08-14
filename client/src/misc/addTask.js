@@ -1,10 +1,11 @@
 import {nanoid} from 'nanoid';
 
-const addTask = async (name, tasks, setTasks) => {
+const addTask = async (name, tasks, setTasks, group) => {
     try{const newTask = {
       id: "todo-" + nanoid(),
       name: name,
       completed: false,
+      group: group
     };
     const newTaskList = [...tasks, newTask];
     await fetch('http://localhost:3001/user/todoList/update',
