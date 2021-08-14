@@ -1,5 +1,7 @@
 import NativeSelect from '@material-ui/core/NativeSelect';
 import React, { useState } from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 const TaskGroupSelector = props => {
 
@@ -7,8 +9,26 @@ const TaskGroupSelector = props => {
 
     const onChangeSelect = (e) => {
         e.preventDefault();
-        console.log(e.target.value);
         props.setGroup(e.target.value)
+    }
+
+    const handleSelect = (e) => {
+        e.target.select();
+      };
+
+    const deleteGroupButton = async e => {
+        const newGroups = props.groups.filter(group => group !== props.curGroup)
+        props.setGroups(newGroups);
+        await fetch('http://localhost:3001/user/groups/delete',
+            {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newGroups)
+            });
     }
 
     const newGroupNameHandler = (e) => {
@@ -18,9 +38,9 @@ const TaskGroupSelector = props => {
     const newGroupSubmit = async (e) => {
 
         if(e.key === 'Enter'){
-            console.log('Im here');
+            setNewGroup('');
             const newGroups = [...props.groups, newGroup];
-            props.setGroup(newGroups);
+            props.setGroups(newGroups);
             await fetch('http://localhost:3001/user/groups/add',
             {
             method: 'POST',
@@ -31,20 +51,21 @@ const TaskGroupSelector = props => {
             },
             body: JSON.stringify(newGroups)
             });
-            setNewGroup('');
         }
         
     }
 
     return (
         <div id='selectdiv'>
-        
-        <NativeSelect id="select" onChange={onChangeSelect}>
-            {props.groups.map(group => (
-                 <option value={group}>{group}</option>
-            ))}
-        </NativeSelect>
-        <input value={newGroup} onChange={newGroupNameHandler} onKeyDown={newGroupSubmit}></input>
+            <IconButton aria-label="delete" onClick={deleteGroupButton}>
+                <DeleteForeverIcon />
+            </IconButton>
+            <NativeSelect id="select" onChange={onChangeSelect}>
+                {props.groups.map(group => (
+                    <option key={group} value={group}>{group}</option>
+                ))}
+            </NativeSelect>
+            <input onClick={handleSelect} value={newGroup} onChange={newGroupNameHandler} onKeyDown={newGroupSubmit}></input>
         </div>
     
         

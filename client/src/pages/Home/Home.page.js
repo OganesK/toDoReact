@@ -65,7 +65,7 @@ const FILTER_MAP = {
     return (
       <div className="todoapp stack-large">
         <h1>Todo-List</h1>
-        <TaskGroupSelector groups={groups} setGroup={setGroup}/>
+        <TaskGroupSelector groups={groups} setGroup={setGroup} curGroup={group} setGroups={setGroups}/>
         <Form addTask={addTask} tasks={tasks} setTasks={setTasks} group={group}/>
         <div className="filters btn-group stack-exception">
           {filterList}

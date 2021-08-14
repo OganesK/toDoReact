@@ -47,9 +47,18 @@ router.post('/user/groups/add', async (req, res) => {
 })
 
 router.get('/user/groups', async (req, res) => {
-    const id = req.headers.cookie.replace('id=','');
+    try{const id = req.headers.cookie.replace('id=','');
     const result = await userModel.findOne({_id: id});
-    res.status(200).send(result.groups)
+    res.status(200).send(result.groups)}catch(e){
+        res.status(500).send(e);
+    }
+})
+
+router.post('/user/groups/delete', async (req, res) => {
+    try{const id = req.headers.cookie.replace('id=', '');
+    await userModel.updateOne({'_id': id}, {groups:req.body})}catch(e){
+        res.status(500).send(e);
+    }
 })
 
 module.exports = router;
