@@ -5,10 +5,11 @@ const addTask = async (name, tasks, setTasks, group) => {
       id: `todo-${  nanoid()}`,
       name,
       completed: false,
-      group
+      group,
+      state: 'To-Do'
     };
     const newTaskList = [...tasks, newTask];
-    await fetch('/user/todoList/update',
+    await fetch('http://localhost:3001/user/todoList/update',
     {
       method: 'POST',
       credentials: 'include',

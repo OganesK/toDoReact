@@ -35,6 +35,7 @@ const FILTER_MAP = {
     const [group, setGroup] = useState('Default');
     const [groups, setGroups] = useState(['Default', 'nDefault']);
     const [logging, setLogging] = useState(false);
+    const STATES = ['To-Do', 'In progress', 'Complited']
     
   
     const filterList = FILTER_NAMES.map(name => (
@@ -91,7 +92,8 @@ const FILTER_MAP = {
             deleteTask,
             setTasks,
             editTask,
-            group)}
+            group,
+            STATES)}
         </ul>
       </div>
     )

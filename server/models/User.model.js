@@ -21,6 +21,9 @@ const userSchema = new Schema({
             },
             group:{
                 type: String
+            },
+            state:{
+                type: String
             }
         }
     ],

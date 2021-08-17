@@ -1,6 +1,8 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useRef, useEffect } from 'react';
+import NativeSelect from '@material-ui/core/NativeSelect';
 
 export default function Todo (props) {
 
@@ -19,6 +21,26 @@ export default function Todo (props) {
     const editButtonRef = useRef(null);
 
     const wasEditing = usePrevious(isEditing);
+
+    const stateChangeHandler = async (id,e) => {
+      const editedTaskList = props.data.map(task => {
+        if(id === task.id) {
+          return {...task, state: e.target.value};
+        }
+        return task;
+        })
+      await fetch('http://localhost:3001/user/todoList/update',
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editedTaskList)
+      });
+        props.setData(editedTaskList);
+      }
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -92,7 +114,8 @@ export default function Todo (props) {
                 onChange={() => props.toggleTaskComplited(props.id)}
               />
               <label className="todo-label" htmlFor={props.id}>
-                {props.name}
+                <strong>Task: </strong>{props.name}
+                <strong> State: </strong>{props.state}
               </label>
             </div>
             <div className="btn-group">
@@ -110,6 +133,14 @@ export default function Todo (props) {
               >
                 Delete <span className="visually-hidden">{props.name}</span>
               </button>
+              <NativeSelect id="select" onChange={ (e) => 
+                { 
+                  stateChangeHandler(props.id, e);
+                }}>
+                {props.states.map(state => (
+                  <option value={state}>{state}</option>
+                ))}
+              </NativeSelect>
             </div>
         </div>
       );

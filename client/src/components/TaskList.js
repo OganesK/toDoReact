@@ -2,7 +2,7 @@ import { React } from 'react';
 import Todo from './Todo';
 
 
-const taskList = (tasks, FILTER_MAP, filter, toggleTaskComplited, deleteTask, setTasks, editTask, group) => (
+const taskList = (tasks, FILTER_MAP, filter, toggleTaskComplited, deleteTask, setTasks, editTask, group, states) => (
     tasks
     .filter(FILTER_MAP[filter])
     .map(task => {
@@ -18,6 +18,8 @@ const taskList = (tasks, FILTER_MAP, filter, toggleTaskComplited, deleteTask, se
                     editTask={editTask}
                     setData={setTasks}
                     data={tasks}
+                    state={task.state}
+                    states={states}
                 />
             )
         }
