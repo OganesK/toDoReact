@@ -31,7 +31,7 @@ export default function Todo (props) {
         setNewName('');
         setEditing(false);
         
-        await fetch(`http://localhost:3001/user/todoList/updateOne`,
+        await fetch(`http://localhost:3001/user/todoList/update`,
         {
           method: 'POST',
           credentials: 'include',
