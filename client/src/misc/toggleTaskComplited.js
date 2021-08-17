@@ -5,7 +5,7 @@ const toggleTaskComplited = async (id, tasks, setTasks) => {
       }
       return task;
     })
-    await fetch('http://localhost:3001/user/todoList/update',
+    await fetch('/user/todoList/update',
     {
       method: 'POST',
       credentials: 'include',

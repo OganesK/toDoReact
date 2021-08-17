@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/destructuring-assignment */
 import React, { useState, useRef, useEffect } from 'react';
 
 export default function Todo (props) {
@@ -31,7 +33,7 @@ export default function Todo (props) {
         setNewName('');
         setEditing(false);
         
-        await fetch(`http://localhost:3001/user/todoList/update`,
+        await fetch(`/user/todoList/update`,
         {
           method: 'POST',
           credentials: 'include',

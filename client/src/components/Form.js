@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import {React, useState} from 'react';
 import addTask from '../misc/addTask';
 
@@ -13,7 +14,7 @@ const Form = (props) => {
         e.preventDefault();
         try{
         addTask(name, props.tasks, props.setTasks, props.group);
-        }catch(e){console.log(e)}
+        }catch(error){console.log(error)}
         setName('');
     }
 

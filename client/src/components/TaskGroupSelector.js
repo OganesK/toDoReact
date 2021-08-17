@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/self-closing-comp */
 import NativeSelect from '@material-ui/core/NativeSelect';
 import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,10 +18,11 @@ const TaskGroupSelector = props => {
         e.target.select();
       };
 
+    // eslint-disable-next-line no-unused-vars
     const deleteGroupButton = async e => {
         const newGroups = props.groups.filter(group => group !== props.curGroup)
         props.setGroups(newGroups);
-        await fetch('http://localhost:3001/user/groups/delete',
+        await fetch('/user/groups/delete',
             {
             method: 'POST',
             credentials: 'include',
@@ -41,7 +44,7 @@ const TaskGroupSelector = props => {
             setNewGroup('');
             const newGroups = [...props.groups, newGroup];
             props.setGroups(newGroups);
-            await fetch('http://localhost:3001/user/groups/add',
+            await fetch('/user/groups/add',
             {
             method: 'POST',
             credentials: 'include',

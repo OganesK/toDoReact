@@ -1,3 +1,4 @@
+// eslint-disable-next-line consistent-return
 export function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

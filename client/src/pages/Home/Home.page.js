@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
 import FilterButton from '../../components/FilterButton';
 import Form from '../../components/Form';

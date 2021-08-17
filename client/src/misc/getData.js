@@ -1,5 +1,5 @@
 const getData = async (id, setTasks, setGroups) => {
-    const response = await fetch(`http://localhost:3001/user/todoList`,
+    const response = await fetch(`/user/todoList`,
     {
       method: 'GET',
       credentials: 'include'

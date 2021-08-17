@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/button-has-type */
 import React from 'react';
 
 // eslint-disable-next-line no-unused-vars
@@ -43,14 +45,12 @@ const submitStyle = {
     display: 'block'
 };
 
-const Field = React.forwardRef(({label, type}, ref) => {
-    return (
+const Field = React.forwardRef(({label, type}, ref) => (
       <div>
         <label style={labelStyle} >{label}</label>
         <input ref={ref} type={type} style={inputStyle} />
       </div>
-    );
-});
+    ));
 
 const AuthPage = ({setLogging}) => {
     const usernameRef = React.useRef();
@@ -66,7 +66,7 @@ const AuthPage = ({setLogging}) => {
             email: usernameRef.current.value,
             password: passwordRef.current.value
         };
-        await fetch('http://localhost:3001/api/users',
+        await fetch('/api/users',
           {
             method: 'POST',
             credentials: 'include',
