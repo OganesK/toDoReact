@@ -1,5 +1,5 @@
 const getId = async (setLoading, data) => {
-  const result = await fetch('/api/users',
+  const result = await fetch('http://localhost:3001/api/users',
   {
     method: 'POST',
     credentials: 'include',

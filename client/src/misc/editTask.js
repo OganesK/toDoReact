@@ -6,7 +6,7 @@ const editTask = async (id, newName, tasks, setTasks) => {
     return task;
   })
   
-  await fetch('/user/todoList/update',
+  await fetch('http://localhost:3001/user/todoList/update',
     {
       method: 'POST',
       credentials: 'include',

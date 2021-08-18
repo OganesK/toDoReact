@@ -1,10 +1,9 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-param-reassign */
-/* eslint-disable react/destructuring-assignment */
 import React, { useState, useRef, useEffect } from 'react';
 import NativeSelect from '@material-ui/core/NativeSelect';
 
-export default function Todo (props) {
+export default function Todo ({deleteTask, name, id, setData, data, completed,
+                              state, tasks, setTasks, states, toggleTaskComplited}) {
 
   const [isEditing, setEditing] = useState(false);
   const[newName, setNewName] = useState('');
@@ -22,9 +21,9 @@ export default function Todo (props) {
 
     const wasEditing = usePrevious(isEditing);
 
-    const stateChangeHandler = async (id,e) => {
-      const editedTaskList = props.data.map(task => {
-        if(id === task.id) {
+    const stateChangeHandler = async (taskId,e) => {
+      const editedTaskList = data.map(task => {
+        if(taskId === task.id) {
           return {...task, state: e.target.value};
         }
         return task;
@@ -39,23 +38,23 @@ export default function Todo (props) {
         },
         body: JSON.stringify(editedTaskList)
       });
-        props.setData(editedTaskList);
+        setData(editedTaskList);
       }
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const newList = props.data.reduce((acc, task) => {
-          if(task.id === props.id){
+        const newList = data.reduce((acc, task) => {
+          if(task.id === id){
             task.name = newName;
           }
           acc.push(task)
           return acc
         }, [])
-        props.setData(newList);
+        setData(newList);
         setNewName('');
         setEditing(false);
         
-        await fetch(`/user/todoList/update`,
+        await fetch(`http:localhost:3001/user/todoList/update`,
         {
           method: 'POST',
           credentials: 'include',
@@ -76,11 +75,11 @@ export default function Todo (props) {
         onSubmit={handleSubmit}
         >
           <div className="form-group">
-            <label className="todo-label" htmlFor={props.id}>
-              New name for {props.name}
+            <label className="todo-label" htmlFor={id}>
+              New name for {name}
             </label>
             <input
-            id={props.id}
+            id={id}
             className="todo-text"
             type="text"
             onChange={handleChange}
@@ -95,11 +94,11 @@ export default function Todo (props) {
             ref={editButtonRef}
             >
               Cancel
-              <span className="visually-hidden">renaming {props.name}</span>
+              <span className="visually-hidden">renaming {name}</span>
             </button>
             <button type="submit" className="btn btn__primary todo-edit">
               Save
-              <span className="visually-hidden">new name for {props.name}</span>
+              <span className="visually-hidden">new name for {name}</span>
             </button>
           </div>
         </form>
@@ -108,14 +107,14 @@ export default function Todo (props) {
         <div className="stack-small">
           <div className="c-cb">
               <input
-                id={props.id}
+                id={id}
                 type="checkbox"
-                defaultChecked={props.completed}
-                onChange={() => props.toggleTaskComplited(props.id)}
+                defaultChecked={completed}
+                onChange={() => toggleTaskComplited(id)}
               />
-              <label className="todo-label" htmlFor={props.id}>
-                <strong>Task: </strong>{props.name}
-                <strong> State: </strong>{props.state}
+              <label className="todo-label" htmlFor={id}>
+                <strong>Task: </strong>{name}
+                <strong> State: </strong>{state}
               </label>
             </div>
             <div className="btn-group">
@@ -124,21 +123,21 @@ export default function Todo (props) {
               className="btn"
               onClick={() => setEditing(true)}
               >
-                Edit <span className="visually-hidden">{props.name}</span>
+                Edit <span className="visually-hidden">{name}</span>
               </button>
               <button
                 type="button"
                 className="btn btn__danger"
-                onClick={() => props.deleteTask(props.id, props.tasks, props.setTasks)}
+                onClick={() => deleteTask(id, tasks, setTasks)}
               >
-                Delete <span className="visually-hidden">{props.name}</span>
+                Delete <span className="visually-hidden">{name}</span>
               </button>
               <NativeSelect id="select" onChange={ (e) => 
                 { 
-                  stateChangeHandler(props.id, e);
+                  stateChangeHandler(id, e);
                 }}>
-                {props.states.map(state => (
-                  <option value={state}>{state}</option>
+                {states.map(taskState => (
+                  <option value={taskState}>{taskState}</option>
                 ))}
               </NativeSelect>
             </div>
@@ -148,9 +147,6 @@ export default function Todo (props) {
       useEffect(() => {
         if (!wasEditing && isEditing) {
             editFieldRef.current.focus();
-          }
-          if (wasEditing && !isEditing) {
-            // editButtonRef.current.focus();
           }
         }, [wasEditing, isEditing]);
 

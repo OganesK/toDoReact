@@ -7,16 +7,12 @@ const authRoute = require('./routes/auth.route');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 require('./config/passport');
+require('./config/config');
 
-const URI = "mongodb+srv://kostjaog:qwertyt123e5@cluster0.dp8zu.mongodb.net/ToDoApp?retryWrites=true&w=majority";
-const PORT = 3001;
-const NODE_ENV = 'production'
-
-mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(BASE_DB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
 
 const app = express();
 app.use(cookieParser());
@@ -36,4 +32,4 @@ if(NODE_ENV === 'production'){
     })
 }
 
-app.listen(process.env.PORT || 3001, () => console.log(`Server is listening on: ${PORT}`));
+app.listen(process.env.PORT || PORT, () => console.log(`Server is listening on: ${PORT}`));

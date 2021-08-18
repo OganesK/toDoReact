@@ -9,3 +9,8 @@
     width: 90px;
     font-size: 1.5em;
 }
+
+#loggingPage {
+    height: '250px';
+    display: 'flex';
+}

@@ -20,6 +20,7 @@ const addTask = async (name, tasks, setTasks, group) => {
       body: JSON.stringify(newTaskList)
     });
     setTasks(newTaskList)}catch(e){
+      // eslint-disable-next-line no-console
       console.log(e)
     }
 

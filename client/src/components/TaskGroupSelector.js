@@ -1,27 +1,24 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/self-closing-comp */
 import NativeSelect from '@material-ui/core/NativeSelect';
 import React, { useState } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-const TaskGroupSelector = props => {
+const TaskGroupSelector = ({ setGroup, groups, setGroups, curGroup}) => {
 
     const [newGroup, setNewGroup] = useState('');
 
     const onChangeSelect = (e) => {
         e.preventDefault();
-        props.setGroup(e.target.value)
+        setGroup(e.target.value)
     }
 
     const handleSelect = (e) => {
         e.target.select();
       };
 
-    // eslint-disable-next-line no-unused-vars
-    const deleteGroupButton = async e => {
-        const newGroups = props.groups.filter(group => group !== props.curGroup)
-        props.setGroups(newGroups);
+    const deleteGroupButton = async () => {
+        const newGroups = groups.filter(group => group !== curGroup)
+        setGroups(newGroups);
         await fetch('/user/groups/delete',
             {
             method: 'POST',
@@ -42,9 +39,9 @@ const TaskGroupSelector = props => {
 
         if(e.key === 'Enter'){
             setNewGroup('');
-            const newGroups = [...props.groups, newGroup];
-            props.setGroups(newGroups);
-            await fetch('/user/groups/add',
+            const newGroups = [...groups, newGroup];
+            setGroups(newGroups);
+            await fetch('http:localhost:3001/user/groups/add',
             {
             method: 'POST',
             credentials: 'include',
@@ -64,11 +61,15 @@ const TaskGroupSelector = props => {
                 <DeleteForeverIcon />
             </IconButton>
             <NativeSelect id="select" onChange={onChangeSelect}>
-                {props.groups.map(group => (
+                {groups.map(group => (
                     <option key={group} value={group}>{group}</option>
                 ))}
             </NativeSelect>
-            <input onClick={handleSelect} value={newGroup} onChange={newGroupNameHandler} onKeyDown={newGroupSubmit}></input>
+            <input
+            onClick={handleSelect}
+            value={newGroup}
+            onChange={newGroupNameHandler}
+            onKeyDown={newGroupSubmit} />
         </div>
     
         
