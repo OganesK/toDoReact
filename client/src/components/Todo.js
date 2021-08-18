@@ -137,7 +137,7 @@ export default function Todo ({deleteTask, name, id, setData, data, completed,
                   stateChangeHandler(id, e);
                 }}>
                 {states.map(taskState => (
-                  <option value={taskState}>{taskState}</option>
+                  <option key ={taskState} value={taskState}>{taskState}</option>
                 ))}
               </NativeSelect>
             </div>

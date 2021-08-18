@@ -66,7 +66,23 @@ const AuthPage = ({setLogging}) => {
             email: usernameRef.current.value,
             password: passwordRef.current.value
         };
-        await fetch('/api/users',
+        try{
+          await fetch('http://localhost:3001/api/users/login',
+          {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({user: {
+              email: data.email,
+              password: data.password
+            }})
+          });
+          setLogging(false);
+        }catch(error){
+          await fetch('http:localhost:3001/api/users',
           {
             method: 'POST',
             credentials: 'include',
@@ -82,6 +98,7 @@ const AuthPage = ({setLogging}) => {
 
         setLogging(false);
       };
+        }
 
     return (
       <form style={formStyle} onSubmit={handleSubmit}>
