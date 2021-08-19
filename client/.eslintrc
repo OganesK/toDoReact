@@ -1,5 +1,5 @@
 {
-    "extends": ["eslint:recommended", "airbnb", "prettier", "prettier"],
+    "extends": ["eslint:recommended", "prettier","airbnb", "prettier"],
     "plugins": ["react-hooks"],
     "env": {
       "browser": true

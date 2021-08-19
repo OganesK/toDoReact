@@ -1,5 +1,6 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/button-has-type */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 import React from 'react';
 
 // eslint-disable-next-line no-unused-vars

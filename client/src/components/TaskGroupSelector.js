@@ -19,7 +19,7 @@ const TaskGroupSelector = ({ setGroup, groups, setGroups, curGroup}) => {
     const deleteGroupButton = async () => {
         const newGroups = groups.filter(group => group !== curGroup)
         setGroups(newGroups);
-        await fetch('/user/groups/delete',
+        await fetch('http://localhost:3001/user/groups/delete',
             {
             method: 'POST',
             credentials: 'include',
@@ -41,7 +41,7 @@ const TaskGroupSelector = ({ setGroup, groups, setGroups, curGroup}) => {
             setNewGroup('');
             const newGroups = [...groups, newGroup];
             setGroups(newGroups);
-            await fetch('http:localhost:3001/user/groups/add',
+            await fetch('http://localhost:3001/user/groups/add',
             {
             method: 'POST',
             credentials: 'include',

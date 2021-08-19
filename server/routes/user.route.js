@@ -28,10 +28,10 @@ router.get('/user/todoList', auth.required, async (req, res) => {
     }
 })
 
-router.post('/user/groups/add', async (req, res) => {
+router.post('/user/groups/add', auth.required, async (req, res) => {
     try{
-        const id = req.headers.cookie.replace('id=','');
-        await userModel.updateOne({'token':id}, {groups: req.body})
+        const { payload: { id } } = req;
+        await userModel.updateOne({'_id':id}, {groups: req.body})
     }catch(e){
         res.status(500).send(e.toString());
     }
@@ -46,9 +46,10 @@ router.get('/user/groups', auth.required, async (req, res) => {
     }
 })
 
-router.post('/user/groups/delete', async (req, res) => {
-    try{const id = req.headers.cookie.replace('id=', '');
-    await userModel.updateOne({'token': id}, {groups:req.body})}catch(e){
+router.post('/user/groups/delete', auth.required, async (req, res) => {
+    try{
+        const { payload: { id } } = req;
+        await userModel.updateOne({'_id': id}, {groups:req.body})}catch(e){
         res.status(500).send(e);
     }
 })
