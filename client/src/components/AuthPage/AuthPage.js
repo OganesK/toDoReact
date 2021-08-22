@@ -63,43 +63,49 @@ const AuthPage = ({setLogging}) => {
 
     const onLogIn = async e => {
         e.preventDefault();
+        console.log('Im here')
+
         const data = {
             email: usernameRef.current.value,
             password: passwordRef.current.value
         };
-        try{
-          await fetch('http://localhost:3001/api/users/login',
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({user: {
-              email: data.email,
-              password: data.password
-            }})
-          });
-          setLogging(false);
-        }catch(error){
-          await fetch('http:localhost:3001/api/users',
-          {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({user: {
-              email: data.email,
-              password: data.password
-            }})
-          });
+        const res = await fetch('http://localhost:3001/api/users/login',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user: {
+            email: data.email,
+            password: data.password
+          }})
+        });
+        console.log(res)
 
-        setLogging(false);
-      };
-        }
+        // setLogging(false);
+        if(res.status === 500){
+          await fetch('http://localhost:3001/api/users',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({user: {
+            email: data.email,
+            password: data.password
+          }})
+        });
+
+      setLogging(false);
+    }else{
+      setLogging(false);
+    }
+        
+      }
 
     return (
       <form style={formStyle} onSubmit={handleSubmit}>

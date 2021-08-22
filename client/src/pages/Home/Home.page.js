@@ -1,12 +1,5 @@
 /* eslint-disable react/jsx-boolean-value */
 import React, { useState, useRef, useEffect } from "react";
-// import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-// import BottomNavigation from '@material-ui/core/BottomNavigation';
-// import RestoreIcon from '@material-ui/icons/Restore';
-// import FavoriteIcon from '@material-ui/icons/Favorite';
-// import LocationOnIcon from '@material-ui/icons/LocationOn';
-// import FolderIcon from '@material-ui/icons/Folder';
-// import Drawer from '@material-ui/core/Drawer';
 import Form from '../../components/Form';
 import editTask from '../../misc/editTask';
 import deleteTask from '../../misc/deleteTask';
@@ -17,10 +10,9 @@ import handleUseEffect from '../../misc/handleUserEffect';
 import getData from '../../misc/getData';
 import taskList from "../../components/TaskList";
 import './Home.css'
-import Header from '../../components/Sidebar/SideBar'
 import AuthPage from "../../components/AuthPage/AuthPage";
 import FilterList from "../../components/FilterList";
-
+import SideBar from '../../components/Sidebar/SideBar'
 
 const FILTER_MAP = {
   All: () => true,
@@ -58,8 +50,8 @@ const  Home = () => {
 
 
   return (
-      <div className="todoapp stack-large">
-        <Header groups={groups} setGroup={setGroup} setGroups={setGroups} curGroup={group}/>
+      <SideBar mainContent = {
+        <div className="todoapp stack-large">
         <h1><strong>To-do App</strong></h1>
         <Form addTask={addTask} tasks={tasks} setTasks={setTasks} group={group}/>
         <div className="filters btn-group stack-exception">
@@ -83,6 +75,7 @@ const  Home = () => {
             STATES)}
         </ul>
       </div>
+      } groups={groups} setGroup={setGroup} setGroups={setGroups} curGroup={group}/>
   )
     
 }

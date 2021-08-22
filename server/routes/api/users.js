@@ -23,8 +23,12 @@ router.post('/', auth.optional, async (req, res, next) => {
       },
     });
   }
-
-  const finalUser = new Users(user);
+  const newUser = {
+    email:user.email,
+    password:user.password,
+    groups:['Default']
+  }
+  const finalUser = new Users(newUser);
 
   finalUser.setPassword(user.password);
   await finalUser.save();
@@ -40,7 +44,6 @@ router.post('/', auth.optional, async (req, res, next) => {
 //POST login route (optional, everyone has access)
 router.post('/login', auth.optional, (req, res, next) => {
   const { body: { user } } = req;
-
   if(!user.email) {
     return res.status(422).json({
       errors: {
@@ -68,6 +71,10 @@ router.post('/login', auth.optional, (req, res, next) => {
       res.cookie('authorization', user.token, {path: '/'});
       res.send('Success');
       return res.json({ user: user.toAuthJSON() });
+    }
+    if(!passportUser){
+      return next(500)
+      console.log('error')
     }
 
     return res.status(400).info;
