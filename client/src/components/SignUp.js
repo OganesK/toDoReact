@@ -1,8 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useState } from 'react';
-import SignUp from '../SignUp';
+import React from 'react';
 
 // eslint-disable-next-line no-unused-vars
 const appStyle = {
@@ -54,40 +53,25 @@ const Field = React.forwardRef(({label, type}, ref) => (
       </div>
     ));
 
-const AuthPage = ({setLogging}) => {
+const SingUp = ({setLogging, setSignUp}) => {
     const usernameRef = React.useRef();
     const passwordRef = React.useRef();
-    const [ signUp, setSignUp ] = useState(false)
-
     const handleSubmit = e => {
         e.preventDefault();
     }
 
-    const onSingUp =() => {
-      setSignUp(true)
+    const backButtonHandler = () => {
+        setSignUp(false);
     }
 
-    const onLogIn = async e => {
+    const onSingUp = async e => {
         e.preventDefault();
+
         const data = {
             email: usernameRef.current.value,
             password: passwordRef.current.value
         };
-        const res = await fetch('http://localhost:3001/api/users/login',
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({user: {
-            email: data.email,
-            password: data.password
-          }})
-        });
-        if(res.status === 500){
-          await fetch('http://localhost:3001/api/users',
+        await fetch('http://localhost:3001/api/users',
         {
           method: 'POST',
           credentials: 'include',
@@ -102,28 +86,18 @@ const AuthPage = ({setLogging}) => {
         });
 
       setLogging(false);
-    }else{
-      setLogging(false);
-    }
-        
       }
-
-    if(signUp){
-      return(
-        <SignUp setLogging={setLogging} setSignUp={setSignUp}/>
-      )
-    }
     
     return (
       <form style={formStyle} onSubmit={handleSubmit}>
         <Field ref={usernameRef} label="Username:" type="text" />
         <Field ref={passwordRef} label="Password:" type="password" />
         <div>
-          <button style={submitStyle} type="logIn" onClick={onLogIn}>Log In</button>
           <button style={submitStyle} type="logIn" onClick={onSingUp}>Sign Up</button>
+          <button style={submitStyle} type="logIn" onClick={backButtonHandler}>Go Back To LogIn</button>
         </div>
       </form>
     );
 };
 
-export default AuthPage;
+export default SingUp;

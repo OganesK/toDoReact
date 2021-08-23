@@ -32,6 +32,7 @@ router.post('/user/groups/add', auth.required, async (req, res) => {
     try{
         const { payload: { id } } = req;
         await userModel.updateOne({'_id':id}, {groups: req.body})
+        res.status(200).send('Success')
     }catch(e){
         res.status(500).send(e.toString());
     }

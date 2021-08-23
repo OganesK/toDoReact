@@ -16,10 +16,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+// eslint-disable-next-line import/no-unresolved
+import LogoutIcon from '@material-ui/icons/Logout';
+import DeleteIcon from '@material-ui/icons/Delete'
+import { useCookies } from "react-cookie";
+
 
 const drawerWidth = 240;
 
@@ -64,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(5),
+    padding: theme.spacing(1),
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -82,10 +84,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PersistentDrawerLeft(props) {
+  // eslint-disable-next-line no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies(["authorization"]);
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [newGroup, setNewGroup] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [curGroup, setCurGroup] = useState(props.curGroup)
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -98,6 +104,48 @@ export default function PersistentDrawerLeft(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const groupChooseHandler = (groupName) => {
+    props.setGroup(groupName);
+    setCurGroup(groupName);
+  }
+
+  const deleteHandler = async (name) => {
+    const newGroups = props.groups.filter(group => group !== name)
+    await fetch('http://localhost:3001/user/groups/delete',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newGroups)
+  })
+  props.setGroups(newGroups)
+  }
+
+  const logOutHandler = () => {
+    removeCookie('authorization');
+    props.setLogging(true);
+  }
+
+  const newGroupSubmit = async () => {
+    const newGroups = [...props.groups, newGroup]
+    await fetch('http://localhost:3001/user/groups/add',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newGroups)
+  })
+  props.setGroups(newGroups)
+  setNewGroup('')
+}
+
 
   return (
     <div className={classes.root}>
@@ -139,22 +187,26 @@ export default function PersistentDrawerLeft(props) {
         </div>
         <Divider />
         <List>
-          {props.groups.map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+          {props.groups.map((text) => (
+            <ListItem button key={text} onClick={() => groupChooseHandler(text)}>
               <ListItemText primary={text} />
+              <IconButton aria-label="delete" onClick={() => deleteHandler(text)}>
+                <DeleteIcon />
+              </IconButton>
             </ListItem>
           ))}
           <ListItem>
           <TextField id="standard-basic" label="Text new group name" value={newGroup} onChange={handleNewGroupInput}/>
           </ListItem>
           <ListItem>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={newGroupSubmit}>
             Add new group
           </Button>
           </ListItem>
-
         </List>
+        <IconButton aria-label="delete" onClick={logOutHandler}>
+            <LogoutIcon />
+        </IconButton>
       </Drawer>
       <main
         className={clsx(classes.content, {

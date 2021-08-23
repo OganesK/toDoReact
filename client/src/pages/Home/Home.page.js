@@ -75,7 +75,7 @@ const  Home = () => {
             STATES)}
         </ul>
       </div>
-      } groups={groups} setGroup={setGroup} setGroups={setGroups} curGroup={group}/>
+      } groups={groups} setGroup={setGroup} setGroups={setGroups} curGroup={group} setLogging={setLogging}/>
   )
     
 }
